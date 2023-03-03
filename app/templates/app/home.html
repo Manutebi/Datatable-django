@@ -21,9 +21,12 @@
      <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
 
      <style>
+       body{
+        background-color: cornflowerblue;
+    }
       table thead{
-    background: linear-gradient(to right, #f86700, #f9c180); 
-    color:white;
+   
+    color:black;
     }
       .seleccionada {
     background-color: #00c8ff !important;
@@ -32,11 +35,17 @@
 
 
 </head>
-<body>
+<body class="container-fluid p-5 mb-5 ">
 
-  <table id="example">
-    <thead>
-        <tr>
+  <button class="btn btn-danger" id="borrarFiltros">Borrar filtros</button>
+  <button class="btn btn-dark" id="Actualizar">Actualizar</button>
+<div class="table-responsive" id="mydatatable-container shadow-lg  bg-body rounded" 
+id="example-container" 
+style="background-color: whitesmoke;">
+  
+  <table class="records_list table table-striped table-bordered table-hover table-ligth" style="width: 100%;"  id="example">
+      <thead>
+          <tr>
             <th>Name</th>
             <th>Industry</th>
             <th>Size</th>
@@ -46,26 +55,34 @@
             <th>Opportunities</th>
             <th>HQ address</th>
             <th>Map cache</th>
-            
-        </tr>
-    </thead>
-    <tbody>
+          </tr>
+
+      </thead>
+      <tbody>
         {% for record in data %}
-        <tr>
+        <tr class="fila">
             <td>{{ record.fields.Name }}</td>
             <td>{{ record.fields.Industry }}</td>
             <td>{{ record.fields.Size }}</td>
-            <td>{{ record.fields.Companywebsite }}</td>
-            <td>{{ record.fields.CompanyLinkedIn }}</td>
+            <td>{{ record.fields.Company_website }}</td>
+            <td>{{ record.fields.Company_linkedIn }}</td>
             <td>{{ record.fields.Contacts }}</td>
             <td>{{ record.fields.Opportunities }}</td>
-            <td>{{ record.fields.HQaddress }}</td>
-            <td>{{ record.fields.Mapcache }}</td>
+            <td>{{ record.fields.HQ_address }}</td>
+            <td>{{ record.fields.Map_cache }}</td>
         </tr>
         {% endfor %}
     </tbody>
-</table>
-</table>
+  </table>
+</div>
+
+
+
+
+
+
+
+
 
 
 <!-- select -->
@@ -88,7 +105,7 @@ $(document).ready(function() {
                 .columns()
                 .every(function () {
                     var column = this;
-                    var select = $('<select><option value=""></option></select>')
+                    var select = $('<select><option value="">Mostrar datos</option></select>')
                         .appendTo($(column.header()))
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
