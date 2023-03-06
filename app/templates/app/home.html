@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Datatable</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -17,15 +17,29 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.css">
     <script src="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.js"></script>
 
-     <!-- select -->
-     <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+    <!-- Select -->
+    <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
 
-     <style>
-       body{
+    <!-- BOTONES -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.53/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.53/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+
+
+
+
+    <style>
+    body{
         background-color: cornflowerblue;
     }
       table thead{
-   
+
     color:black;
     }
       .seleccionada {
@@ -46,6 +60,7 @@ style="background-color: whitesmoke;">
   <table class="records_list table table-striped table-bordered table-hover table-ligth" style="width: 100%;"  id="example">
       <thead>
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Industry</th>
             <th>Size</th>
@@ -61,6 +76,7 @@ style="background-color: whitesmoke;">
       <tbody>
         {% for record in data %}
         <tr class="fila">
+            <td></td>
             <td>{{ record.fields.Name }}</td>
             <td>{{ record.fields.Industry }}</td>
             <td>{{ record.fields.Size }}</td>
@@ -78,22 +94,19 @@ style="background-color: whitesmoke;">
 
 
 
+<!--libreria pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
 
 
+<!-- Select -->
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script> 
 
-
-
-
-
-<!-- select -->
-<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>  
-
+<!--Responsive-->
 
 <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
 
 <script type="text/javascript">
 
-   
 
 $(document).ready(function() {
   // Inicializar DataTables
@@ -109,10 +122,8 @@ $(document).ready(function() {
                         .appendTo($(column.header()))
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
- 
                             column.search(val ? '^' + val + '$' : '', true, false).draw();
                         });
- 
                     column
                         .data()
                         .unique()
@@ -122,40 +133,47 @@ $(document).ready(function() {
                         });
                 });
         },
-    });
-  
 
-  //Cambio de idioma de los elemeentos
+        
 
-  var settings = {
+      //cambio de idioma de las opciones
     "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
     "responsive": false,
     "language": {
       "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-    "order": [
-      [0, "desc"]
-    ]
+    "order": [[0, "desc"]],
+    scrollY:'50vh',
+    scrollCollapse: false,
+    pagin: true,
+  
   }
 
-  // Inicializar DataTable
-  var table = $('#example').DataTable(settings);
+
+    );
   
+
+
+  // Inicializar DataTable
+  var settings
+  var table = $('#example').DataTable(settings);
+
+  //Creamos una fila en el head de la tabla y lo clonamos para cada columna
   $('#example thead tr').clone(true).appendTo('#example thead');
   
   $('#example thead tr:eq(1) th').each(function (i) {
-     var title = $(this).text();
-     $(this).html('<input type="text" placeholder="Buscar" />');
+    var title = $(this).text();
+    $(this).html('<input type="text" placeholder="Buscar" />');
   
-     $( 'input', this ).on( 'keyup change', function () {
+    $( 'input', this ).on( 'keyup change', function () {
         if ( table.column(i).search() !== this.value ) {
             table
                 .column(i)
                 .search( this.value )
                 .draw();
         }
-     });
+    });
   });
 
   // Filtrar la tabla cuando se hace clic en cualquier celda
@@ -175,9 +193,7 @@ $(document).ready(function() {
     // Establecer el tamaño del placeholder utilizando el método css()
     inputElement.css('width', '100%');
 
-   
 
-   
 });
         
 $('.fila').click(function() {
@@ -189,11 +205,57 @@ $('.fila').click(function() {
   
 });
 
+//Contador 
+$(document).ready(function () {
+    var t = $('#example').DataTable({
+        columnDefs: [
+            {
+                searchable: false,
+                orderable: false,
+                targets: 0,
+            },
+        ],
+        order: [[1, 'asc']],
+    });
 
+    t.on('order.dt search.dt', function () {
+        let i = 1;
+
+        t.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+            this.data(i++);
+        });
+    }).draw();
+});
+
+
+//Funcion para exportar a un pdf los datos de una fila al hacer doble click
+$(document).ready(function() {
+    $('#example').on('dblclick', 'tr', function() {
+        // configfurar para exportar los datos a un PDF
+    });
+});
+
+$(document).ready(function() {
+    $('#example').on('dblclick', 'tr', function() {
+        // Obtener los valores de celda de la fila seleccionada
+        var rowData = $(this).children('td').map(function() {
+            return $(this).text();
+        }).get();
+
+        // Cree un nuevo documento PDF
+        var doc = new jsPDF();
+
+        // Agregar los valores de celda como texto en el documentos PDF
+        doc.text(20, 20, rowData.join(', '));
+
+        // Guardar el archivo PDF
+        doc.save('archivo.pdf');
+    });
+});
 
 
 </script>
-      
-    
 </body>
 </html>
+
+
