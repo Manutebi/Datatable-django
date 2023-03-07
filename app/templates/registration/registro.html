@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+</head>
+<body id="intro" class="bg-image shadow-2-strong">
+    <div class="m-0 vh-100 row justify-content-center align-items-center">
+        <div class="col-8 col-md-4">
+            <div class="card d-flex justify-content-center align-items-center">
+                <img class="card-img-top" src="" alt="logo">
+                <div class="card-body">
+                    <h2> Registro de usuario</h2>
+                    <hr>
+                    <form class="form-group" action="" method="post">
+
+                        {% csrf_token %}
+                        {{ form }}
+                        <hr>
+                        
+                        <button type="submit" class="btn btn-primary float-end" onclick="location.href='home.html'"  style="background-color:#7c42dd;border-color:#7c42dd">Iniciar Sesión</button>
+                    </form>
+                    <div class="float-start">
+                        <a href="{% url 'home' %}" class="" style="color:#7c42dd;text-decoration:none">Ir al
+                            Home</a> |
+                        <a href="{% url 'home' %}" style="color:#7c42dd;text-decoration:none">Registrarse</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

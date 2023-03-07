@@ -32,8 +32,6 @@
 
 
 
-
-
     <style>
     body{
         background-color: cornflowerblue;
@@ -45,19 +43,24 @@
       .seleccionada {
     background-color: #00c8ff !important;
   }
+
+
   </style>
 
 
 </head>
+
+
 <body class="container-fluid p-5 mb-5 ">
 
+  <button class="btn btn-secondary" id="recargar">Recargar</button>
   <button class="btn btn-danger" id="borrarFiltros">Borrar filtros</button>
   <button class="btn btn-dark" id="Actualizar">Actualizar</button>
 <div class="table-responsive" id="mydatatable-container shadow-lg  bg-body rounded" 
-id="example-container" 
+id="example-container"  
 style="background-color: whitesmoke;">
   
-  <table class="records_list table table-striped table-bordered table-hover table-ligth" style="width: 100%;"  id="example">
+  <table class="records_list table table-striped table-bordered hover order-column table-ligth" style="width: 100%;"  id="example">
       <thead>
           <tr>
             <th></th>
@@ -88,21 +91,18 @@ style="background-color: whitesmoke;">
             <td>{{ record.fields.Map_cache }}</td>
         </tr>
         {% endfor %}
-    </tbody>
+    </tbody> 
   </table>
 </div>
-
 
 
 <!--libreria pdf -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
 
-
 <!-- Select -->
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script> 
 
 <!--Responsive-->
-
 <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
 
 <script type="text/javascript">
@@ -133,10 +133,8 @@ $(document).ready(function() {
                         });
                 });
         },
-
         
-
-      //cambio de idioma de las opciones
+      //Cambio de idioma de las opciones
     "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
     "responsive": false,
     "language": {
@@ -144,8 +142,8 @@ $(document).ready(function() {
     },
     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
     "order": [[0, "desc"]],
-    scrollY:'50vh',
-    scrollCollapse: false,
+    scrollX: true,
+    scrollCollapse: true,
     pagin: true,
   
   }
@@ -194,6 +192,7 @@ $(document).ready(function() {
     inputElement.css('width', '100%');
 
 
+
 });
         
 $('.fila').click(function() {
@@ -239,18 +238,33 @@ $(document).ready(function() {
     $('#example').on('dblclick', 'tr', function() {
         // Obtener los valores de celda de la fila seleccionada
         var rowData = $(this).children('td').map(function() {
-            return $(this).text();
+            return $(this).text(); 
         }).get();
-
         // Cree un nuevo documento PDF
         var doc = new jsPDF();
-
         // Agregar los valores de celda como texto en el documentos PDF
         doc.text(20, 20, rowData.join(', '));
-
         // Guardar el archivo PDF
         doc.save('archivo.pdf');
     });
+});   
+
+
+$(document).ready(function () {
+    var table = $('#example').DataTable();
+
+    $('#example tbody').on('mouseenter', 'td', function () {
+        var colIdx = table.cell(this).index().column;
+
+        $(table.cells().nodes()).removeClass('highlight');
+        $(table.column(colIdx).nodes()).addClass('highlight');
+    });
+});
+
+const reload = document.getElementById('recargar');
+
+reload.addEventListener('click', _ => { // el _ es para indicar la ausencia de parametros
+    location.reload();
 });
 
 
